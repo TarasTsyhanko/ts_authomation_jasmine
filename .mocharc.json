@@ -1,0 +1,9 @@
+{
+  "require": ["source-map-support/register", "ts-node/register"],
+  "timeout": 300000,
+  "spec": "./test/*/*.spec.ts",
+  "reporter": "mocha-multi-reporters",
+  "reporter-option": "configFile=reporterConfig.json",
+
+  "parallel": false
+}

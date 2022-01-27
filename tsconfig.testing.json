@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "lib": ["es2017"],
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "inlineSourceMap": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "include": ["scripts/**/*.ts", "test/ui/*.ts", "node_modules/lodash-es/**/*.js"]
+}

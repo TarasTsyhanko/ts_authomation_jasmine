@@ -1,0 +1,8 @@
+---
+data:
+  - solevedTasksChecked: true
+    unSolevedTasksChecked: false
+    checkedTaksStatus: 'Solved'
+  - solevedTasksChecked: false
+    unSolevedTasksChecked: true
+    checkedTaksStatus: 'Solve Challenge'

@@ -1,30 +1,29 @@
-import { Page} from '@playwright/test';
-import {DashboardPage} from "./DashboardPage";
-import {find} from "../../../lib/ElementSearch";
+import {DashboardPage} from "./dashboard-page";
+import {AbstractPage} from "./AbstractPage";
 
-export class LoginPage {
-    readonly page: Page;
+export class LoginPage extends AbstractPage {
 
-    private usernameInput: string = "//*[@id='input-1']";
-    private passwordInput: string = "//*[@id='input-2']";
-    private submitButton: string = "//button[@data-analytics='LoginPassword']";
-
-    constructor(page: Page) {
-        this.page = page
+    loginFormContainer() {
+        return this.$('.auth-box-container')
     }
 
-    public async gotoLogin(url: string) {
-        await this.page.goto(url);
-        await this.page.waitForLoadState('domcontentloaded');
-        return this;
+    usernameInput() {
+        return this.$('//*[@id="input-1"]')
+    }
+
+    passwordInput() {
+        return this.$("//*[@id='input-2']")
+    }
+
+    submitButton() {
+        return this.$("//button[@data-analytics='LoginPassword']")
     }
 
     public async login(username: string, password: string) {
-        await find(this.usernameInput).then(e => e.fill(username))
-        await find(this.passwordInput).then(e => e.fill(password))
-        await find(this.submitButton).then(e => e.click())
-
-        await this.page.waitForNavigation()
-        return new DashboardPage(this.page)
+        await this.usernameInput().sendKeys(username);
+        await this.passwordInput().sendKeys(password);
+        await this.submitButton().click();
+        await this.loginFormContainer().waitForDisappear();
+        return new DashboardPage();
     }
 }

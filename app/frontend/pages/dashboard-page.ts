@@ -1,15 +1,26 @@
-import {Page} from "@playwright/test";
-import "jasmine";
+import {AbstractPage} from "./AbstractPage";
+import {TaskListPage} from "./task-list-page";
+import {expect} from "chai";
 
-export class DashboardPage {
-    readonly page: Page;
-    readonly usernameLabel = "//span[@class='username text-ellipsis']"
+export class DashboardPage extends AbstractPage {
 
-    constructor(page: Page) {
-        this.page = page
+    usernameLabel(){
+      return this.$("//span[@class='username text-ellipsis']")
+    }
+
+    continuePracticeLink(){
+        return this.$("//*[text()='Java']//ancestor::*[@class='base-card']//*[text()='Continue Practice']")
     }
 
     public async verifyDashboardPage() {
-        expect(await this.page.isVisible(this.usernameLabel)).toBe(true)
+        const result = await this.usernameLabel().isExisting();
+        expect(result).to.eql(true)
+        return this;
+    }
+
+   async openTaskLintPage(){
+        await this.continuePracticeLink().click();
+        await this.continuePracticeLink().waitForDisappear();
+        return new TaskListPage();
     }
 }

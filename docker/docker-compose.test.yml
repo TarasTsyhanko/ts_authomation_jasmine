@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  typescript_test:
+    build:
+      context: ../
+    container_name: compose_tsc_test
+    command: bash -c "REMOTE_HOST=host.docker.internal npm test"

@@ -1,51 +1,31 @@
-const playwright = require('playwright');
+import {WebDriver} from "../../../lib/driver/web-driver";
+import {PageElement} from "../../../lib/PageElement";
+import {ElementCollections} from "../../../lib/ElementCollections";
+;
 
-import { expect, Locator, Page } from '@playwright/test';
 
+export abstract class AbstractPage {
 
-export class AbstractPage {
-    readonly page: Page;
-    readonly getStartedLink: Locator;
-    readonly coreConceptsLink: Locator;
-    readonly tocList: Locator;
-
-    constructor(page: Page) {
-        this.page = page;
-        this.getStartedLink = page.locator('text=Get started');
-        this.coreConceptsLink = page.locator('text=Core concepts');
-        this.tocList = page.locator('article ul > li > a');
+    constructor() {
+        WebDriver.makeScreenshot(this.constructor.name)
     }
 
-    async goto() {
-        await this.page.goto('https://playwright.dev');
-        await this.page.screenshot({ path: 'my_screenshot.png' })
-
+    protected async driver() {
+        return WebDriver.instance();
     }
 
-    async getStarted() {
-        await this.getStartedLink.first().click();
-        await expect(this.coreConceptsLink).toBeVisible();
+    protected $(locator: string) {
+        return new PageElement(locator)
     }
 
-    async coreConcepts() {
-        await this.getStarted();
-        await this.page.click('text=Guides');
-        await this.coreConceptsLink.click();
-        await expect(this.page.locator('h1').locator("text=Core concepts")).toBeVisible();
+    protected $$(locator: string) {
+        return new ElementCollections(locator)
     }
 
-    public openPage(): void {
-        (async () => {
-            //console.log('end of method')
-            const browser = await playwright['firefox'].launch({
-                executablePath: '~/Library/Caches/ms-playwright/firefox-1304'
-            });
-            const context = await browser.newContext();
-            const page = await context.newPage();
-            await page.goto('https://playwright.dev/docs/test-reporters');
-            await page.screenshot({path: `example-chromium.png`});
-            await browser.close();
-        })();
-        console.log('end of method')
+    public async refreshPage() {
+        await this.driver().then(async _ => _.url(await _.getUrl()))
+        await WebDriver.waitPageLoaded();
+        return this;
     }
+
 }

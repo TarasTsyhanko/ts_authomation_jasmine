@@ -1,0 +1,6 @@
+{
+  "reporterEnabled": "mocha-allure2-reporter, list",
+  "allureMochaReporterOptions": {
+    "resultsDir": "./report/allure-results"
+  }
+}
